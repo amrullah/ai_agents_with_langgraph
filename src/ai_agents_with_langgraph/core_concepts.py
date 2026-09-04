@@ -23,5 +23,26 @@ def demo_basic_chain():
 
     return chain
 
+def demo_batch_execution():
+    prompt = ChatPromptTemplate.from_template(
+        "Translate to French: {text}"
+    )
+    model = ChatOpenAI(model='gpt-4o-mini', temperature=0.7)
+    parser = StrOutputParser()
+
+    chain = prompt | model | parser
+
+    inputs = [
+        {'text': 'Hello, how are you?'},
+        {'text': 'What is your name?'}
+    ]
+
+    results = chain.batch(inputs)
+
+    for text, result in zip(inputs, results):
+        print(f'text: {text} => Result: {result}')
+
 if __name__ == '__main__':
-    demo_basic_chain()
+    # uncomment one at a time:
+    # demo_basic_chain()
+    demo_batch_execution()
