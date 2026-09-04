@@ -56,8 +56,24 @@ def demo_streaming_output():
     print()
 
 
+def demo_schema_inspect():
+    prompt = ChatPromptTemplate.from_template(
+            "Write a Haiku about: {topic}"
+        )
+    model = ChatOpenAI(model='gpt-4o-mini', temperature=0.7)
+    parser = StrOutputParser()
+
+    chain = prompt | model | parser
+
+    input_schema = chain.input_schema.model_json_schema()
+    output_schema = chain.output_schema.model_json_schema()
+
+    print(f"input_schema: {input_schema}")
+    print(f"output_schema: {output_schema}")
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # demo_basic_chain()
     # demo_batch_execution()
-    demo_streaming_output()
+    # demo_streaming_output()
+    demo_schema_inspect()
