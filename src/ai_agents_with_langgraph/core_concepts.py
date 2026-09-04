@@ -42,7 +42,22 @@ def demo_batch_execution():
     for text, result in zip(inputs, results):
         print(f'text: {text} => Result: {result}')
 
+def demo_streaming_output():
+    prompt = ChatPromptTemplate.from_template(
+        "Write a Haiku about: {topic}"
+    )
+    model = ChatOpenAI(model='gpt-4o-mini', temperature=0.7)
+    parser = StrOutputParser()
+
+    chain = prompt | model | parser
+
+    for chunk in chain.stream({"topic": "nature"}):
+        print(chunk, end="", flush=True)
+    print()
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # demo_basic_chain()
-    demo_batch_execution()
+    # demo_batch_execution()
+    demo_streaming_output()
