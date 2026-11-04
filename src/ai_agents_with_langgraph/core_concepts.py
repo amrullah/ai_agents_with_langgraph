@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 
@@ -109,9 +109,48 @@ def demo_basic_templates():
         ('human', 'Translate "{text}" to "{language}" ')
     ])
 
-    multi_messages = multi_message_template.format(adjective='helpful', text="Hello World", language="French")
+    multi_messages = multi_message_template.format(adjective='grumpy old man', text="Hello World", language="French")
     print("multi messages from template: ", multi_messages)
 
+
+    parser = StrOutputParser()
+    model = init_chat_model('gpt-4o-mini', temperature=0)
+
+    chain = multi_message_template | model | parser
+    result = chain.invoke({'adjective': 'helpful', 'text': 'hello world', 'language': 'French'})
+    print(result)
+
+
+def demo_few_shot_prompting():
+    examples = [
+        {'word': 'happy', 'opposite': 'sad'},
+        {'word': 'fast', 'opposite': 'slow'},
+        {'word': 'big', 'opposite': 'small'},
+    ]
+
+    prompt_template = ChatPromptTemplate.from_messages([
+        ('human', "what's the opposite of {word}?"),
+        ('ai', "The opposite of {word} is {opposite}")
+    ])
+
+    few_shot_prompt_template = FewShotChatMessagePromptTemplate(
+        example_prompt=prompt_template,
+        examples=examples
+    )
+
+    final_prompt = ChatPromptTemplate.from_messages([
+        ('system', 'You give the opposite of words, follow the examples'),
+        few_shot_prompt_template,
+        ('human', "What's the opposite of the word {word}?")
+    ])
+
+    model = init_chat_model('gpt-4o-mini', temperature=0)
+    parser = StrOutputParser()
+
+    chain = final_prompt | model | parser
+    result = chain.invoke({"word": "bright"})
+
+    print(result)
 
 if __name__ == '__main__':
     # uncomment one at a time:
@@ -119,4 +158,5 @@ if __name__ == '__main__':
     # demo_streaming_output()
     # demo_schema_inspect()
     # demo_message_types()
-    demo_basic_templates()
+    # demo_basic_templates()
+    demo_few_shot_prompting()
