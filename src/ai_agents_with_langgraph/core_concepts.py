@@ -98,9 +98,25 @@ def demo_message_types():
     response = model.invoke(messages)
     print(f"Follow-up response from the Pirate: {response.content}")
 
+def demo_basic_templates():
+    simple_template = ChatPromptTemplate.from_template("translate '{text}' to '{language}'")
+    simple_message = simple_template.format_messages(text="Hello World", language="French")
+
+    print("simple message from template: ", simple_message)
+
+    multi_message_template = ChatPromptTemplate.from_messages([
+        ('system', 'You are a {adjective} translator. After translating whatever the user asks to, tell a sentence according to your persona'),
+        ('human', 'Translate "{text}" to "{language}" ')
+    ])
+
+    multi_messages = multi_message_template.format(adjective='helpful', text="Hello World", language="French")
+    print("multi messages from template: ", multi_messages)
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # demo_basic_chain()
     # demo_streaming_output()
     # demo_schema_inspect()
-    demo_message_types()
+    # demo_message_types()
+    demo_basic_templates()
