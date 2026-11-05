@@ -2,8 +2,9 @@ from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
 from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
 
 load_dotenv()
 
@@ -152,11 +153,31 @@ def demo_few_shot_prompting():
 
     print(result)
 
+class Person(BaseModel):
+    name: str = Field(description="person's name")
+    age: int = Field(description="person's age in years")
+    occupation: str = Field(description="person's occupation")
+
+
+def demo_pydantic_output_parser():
+    parser = PydanticOutputParser(pydantic_object=Person)
+    prompt = ChatPromptTemplate.from_template(
+        "Return a JSON object with 'name', 'age' and 'occupation' for: {description}"
+        ).partial(format_instructions=parser.get_format_instructions())
+    model = init_chat_model('gpt-4o-mini', temperature=0)
+
+    chain = prompt | model | parser
+    result = chain.invoke({"description": "A 30 year old artist named Maria"})
+    print(type(result), "->", result)
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
+
     # demo_basic_chain()
     # demo_streaming_output()
     # demo_schema_inspect()
     # demo_message_types()
     # demo_basic_templates()
-    demo_few_shot_prompting()
+    # demo_few_shot_prompting()
+    demo_pydantic_output_parser()
