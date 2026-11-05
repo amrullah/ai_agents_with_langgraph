@@ -171,6 +171,35 @@ def demo_pydantic_output_parser():
     print(type(result), "->", result)
 
 
+class TaskExtraction(BaseModel):
+    task: str = Field(description="The main task to do")
+    priority: str = Field(description="high, medium or low")
+    deadline: str | None = Field(description="deadline if mentioned")
+    assignee: str | None = Field(description="person assigned if mentioned")
+
+
+def demo_structured_output():
+    structured_model = ChatOpenAI(model="gpt-4o-mini", temperature=0).with_structured_output(TaskExtraction)
+
+    prompt = ChatPromptTemplate.from_template("Extract task information from: {text}")
+
+    chain = prompt | structured_model
+    
+    texts = [
+        "John needs to finish the report by Friday - it's urgent",
+        "We should update the docs sometime next week",
+        "Critical: Fix the login bug ASAP",
+    ]
+
+    print("Task Extractions:")
+    for text in texts:
+        result = chain.invoke({"text": text})
+        print(f"\nInput: {text}")
+        print(f"  Task: {result.task}")
+        print(f"  Priority: {result.priority}")
+        print(f"  Deadline: {result.deadline}")
+        print(f"  Assignee: {result.assignee}")
+
 if __name__ == '__main__':
     # uncomment one at a time:
 
@@ -180,4 +209,5 @@ if __name__ == '__main__':
     # demo_message_types()
     # demo_basic_templates()
     # demo_few_shot_prompting()
-    demo_pydantic_output_parser()
+    # demo_pydantic_output_parser()
+    demo_structured_output()
