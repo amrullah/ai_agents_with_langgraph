@@ -276,7 +276,7 @@ def demo_chain_branching():
         classifer = classifier_prompt | model | StrOutputParser()
         
         classification = classifer.invoke(input_dict)
-        code_question_yes = "code" in classification.lower()
+        code_question_yes = "code" not in classification.lower()
         if code_question_yes:
             print("Code question!")
         else:
@@ -298,6 +298,47 @@ def demo_chain_branching():
         print(f"A: {result[:100]}...\n")
 
 
+def demo_debugging():
+    model = init_chat_model('gpt-4o-mini', temperature=0.5)
+
+    prompt = ChatPromptTemplate.from_template("Say hello to {name}")
+    chain = prompt | model | StrOutputParser()
+
+    # Method 1: Get configuration
+    print("**Method 1**")
+    print("Chain input schema:", chain.input_schema.model_json_schema())
+    print("Chain output schema:", chain.output_schema.model_json_schema())
+
+    # Method 2: Use with_config for tracing
+    print("\n**Method 2**")
+    result = chain.with_config(
+        run_name="greeting_chain",
+        tags=["demo", "debugging"],
+    ).invoke({"name": "Alice"})
+    print(f"Greeting: {result}")
+
+    # Method 3: Inspect intermediate steps
+    # Using RunnableLambda for logging
+    def log_step(x, step_name=""):
+        print(f"[{step_name}] {type(x).__name__}: {str(x)[:100]}")
+        return x
+
+    print("\n**Method 3**")
+    debug_chain = (
+        prompt
+        | RunnableLambda(lambda x: log_step(x, "after_prompt"))
+        | model
+        | RunnableLambda(lambda x: log_step(x, "after_model"))
+        | StrOutputParser()
+    )
+
+    print("\nDebug chain execution:")
+    result = debug_chain.invoke({"name": "Debug"})
+    print(f"Greeting: {result}")
+
+
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
 
@@ -311,4 +352,5 @@ if __name__ == '__main__':
     # demo_structured_output()
     # demo_parallel_chain()
     # demo_passthrough_chain()
-    demo_chain_branching()
+    # demo_chain_branching()
+    demo_debugging()
