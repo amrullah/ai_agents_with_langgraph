@@ -1,5 +1,6 @@
 import os
 import tempfile
+import traceback
 
 from langchain_community.document_loaders import (
     TextLoader,
@@ -8,6 +9,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
 )
 from langchain_docling import DoclingLoader
+from langchain_docling.loader import ExportType
 
 
 def load_text_file_old_way():
@@ -77,8 +79,32 @@ def web_loader_old_way():
     print(f"Preview: {documents[0].page_content[:200]}...")
 
 
+
+def web_loader_new_way():
+    try:
+        loader = DoclingLoader(
+            file_path="https://en.wikipedia.org/wiki/Web_scraping",
+            export_type=ExportType.MARKDOWN
+        )
+
+        # Load the page content into LangChain Documents
+        docs = loader.load()
+
+        # Inspect the loaded web document
+        print(f"Loaded {len(docs)} document(s).")
+        print("\n--- Document Metadata ---")
+        print(docs[0].metadata)
+
+        print("\n--- First 100 characters of Markdown page content ---")
+        print(docs[0].page_content[:100])
+
+    except Exception as e:
+        traceback.print_exc()
+        
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # load_text_file_old_way()
     # load_text_file_new_way()
-    web_loader_old_way()
+    # web_loader_old_way()
+    web_loader_new_way()
