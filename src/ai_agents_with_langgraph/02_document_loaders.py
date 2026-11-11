@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import tempfile
 import traceback
 
@@ -102,9 +103,28 @@ def web_loader_new_way():
         traceback.print_exc()
         
 
+def document_loader_with_lazy_loading():
+    """ No new replacement exists currently for DirectoryLoader, at the time of writing this"""
+    # Create temp directory with sample files
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Create sample files
+        for i in range(5):
+            path = Path(tmpdir) / f"doc_{i}.txt"
+            path.write_text(f"This is document {i}. It contains sample content.")
+
+        loader = DirectoryLoader(tmpdir, glob="*.txt", loader_cls=TextLoader)
+
+        print("Initialized lazy loader for directory:", tmpdir)
+        for doc in loader.lazy_load():
+            print("Document Content Preview:", doc.page_content[:50], "...")
+            print("Metadata:", doc.metadata["source"])
+
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # load_text_file_old_way()
     # load_text_file_new_way()
     # web_loader_old_way()
-    web_loader_new_way()
+    # web_loader_new_way()
+    document_loader_with_lazy_loading()
