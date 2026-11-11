@@ -3,7 +3,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
-from langchain_core.runnables import RunnableLambda, RunnableParallel, RunnablePassthrough
+from langchain_core.runnables import RunnableBranch, RunnableLambda, RunnableParallel, RunnablePassthrough
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
@@ -257,6 +257,47 @@ def demo_passthrough_chain():
     print(f"Answer: {result}")
 
 
+def demo_chain_branching():
+    model = init_chat_model('gpt-4o-mini', temperature=0.5)
+    
+    code_prompt = ChatPromptTemplate.from_template(
+        "You are a coding expert. Help with: {input}"
+    )
+    general_prompt = ChatPromptTemplate.from_template(
+        "You are a helpful assistant. Answer: {input}"
+    )
+
+    # Branching chain  based on classification
+    def is_code_question(input_dict):
+        classifier_prompt = ChatPromptTemplate.from_template(
+                "Classify this as 'code' or 'general': {input}\nReturn only the classification."
+            )
+        
+        classifer = classifier_prompt | model | StrOutputParser()
+        
+        classification = classifer.invoke(input_dict)
+        code_question_yes = "code" in classification.lower()
+        if code_question_yes:
+            print("Code question!")
+        else:
+            print("Not a code question")
+        return code_question_yes
+
+    branch = RunnableBranch(
+        (is_code_question, code_prompt | model | StrOutputParser()),
+        general_prompt | model | StrOutputParser(),  # default branch
+    )
+
+    questions = [
+        "How do I write a for loop in Python?",
+        "What's the weather like today?",
+    ]
+    for q in questions:
+        result = branch.invoke({"input": q})
+        print(f"Q: {q}")
+        print(f"A: {result[:100]}...\n")
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
 
@@ -269,4 +310,5 @@ if __name__ == '__main__':
     # demo_pydantic_output_parser()
     # demo_structured_output()
     # demo_parallel_chain()
-    demo_passthrough_chain()
+    # demo_passthrough_chain()
+    demo_chain_branching()
