@@ -3,6 +3,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
+from langchain_core.runnables import RunnableParallel
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
@@ -200,6 +201,33 @@ def demo_structured_output():
         print(f"  Deadline: {result.deadline}")
         print(f"  Assignee: {result.assignee}")
 
+
+def demo_parallel_chain():
+    summarize_prompt = ChatPromptTemplate.from_template("Summarize in two sentences: {text}")
+    keywords_prompt = ChatPromptTemplate.from_template(
+        "Extract 5 keywords in the following text: {text} \n return as a comma separated list"
+    )
+    sentiment_prompt = ChatPromptTemplate.from_template("What is the sentiment of the following text: {text}")
+    model = init_chat_model('gpt-4o-mini', temperature=0)
+
+    parser = StrOutputParser()
+    analysis_chain = RunnableParallel(
+        summary=summarize_prompt | model | parser, 
+        keywords=keywords_prompt | model | parser, 
+        sentiment=sentiment_prompt | model | parser
+    )
+    text = """
+        The latest ChatGPT model introduces enhanced reasoning abilities, allowing it to handle complex, 
+        multi-step tasks with greater accuracy. It now supports real-time interaction across text, audio, 
+        and images, making conversations more dynamic and immersive. Improved personalization enables it 
+        to adapt to individual communication styles and preferences seamlessly. 
+        Additionally, it offers faster responses with richer context, ensuring more natural and engaging dialogue.
+
+    """
+    result = analysis_chain.invoke({'text': text})
+    print(result)
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
 
@@ -210,4 +238,5 @@ if __name__ == '__main__':
     # demo_basic_templates()
     # demo_few_shot_prompting()
     # demo_pydantic_output_parser()
-    demo_structured_output()
+    # demo_structured_output()
+    demo_parallel_chain()
