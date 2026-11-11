@@ -3,7 +3,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
-from langchain_core.runnables import RunnableParallel
+from langchain_core.runnables import RunnableLambda, RunnableParallel, RunnablePassthrough
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
@@ -228,6 +228,35 @@ def demo_parallel_chain():
     print(result)
 
 
+def demo_passthrough_chain():
+
+    def fake_retriever(input_dict):
+        """ simulate a retrieve operation """
+        return "LangChain was created by Harrison Chase in 2022."
+    
+    model = init_chat_model('gpt-4o-mini', temperature=0)
+
+    prompt = ChatPromptTemplate.from_template(
+        "Original question: {question}\n"
+        "Context: {context}\n\n"
+        "Answer the question based on the context."
+    )
+
+    chain = (
+        RunnableParallel(
+            context=RunnableLambda(fake_retriever), question=RunnablePassthrough()
+        )
+        | RunnableLambda(
+            lambda x: {"context": x["context"], "question": x["question"]["question"]}
+        )
+        | prompt
+        | model
+        | StrOutputParser()
+    )
+    result = chain.invoke({"question": "Who created LangChain?"})
+    print(f"Answer: {result}")
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
 
@@ -239,4 +268,5 @@ if __name__ == '__main__':
     # demo_few_shot_prompting()
     # demo_pydantic_output_parser()
     # demo_structured_output()
-    demo_parallel_chain()
+    # demo_parallel_chain()
+    demo_passthrough_chain()
