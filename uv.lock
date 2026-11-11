@@ -18,6 +18,7 @@ name = "ai-agents-with-langgraph"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "docling-slim", extra = ["format-markdown"] },
     { name = "langchain" },
     { name = "langchain-anthropic" },
     { name = "langchain-community" },
@@ -30,6 +31,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "docling-slim", extras = ["format-markdown"], specifier = ">=2.150.0" },
     { name = "langchain", specifier = ">=1.3.18" },
     { name = "langchain-anthropic", specifier = ">=1.7.0" },
     { name = "langchain-community", specifier = ">=0.4.2" },
@@ -525,6 +527,9 @@ convert-core = [
 ]
 feat-chunking = [
     { name = "docling-core", extra = ["chunking"] },
+]
+format-markdown = [
+    { name = "marko" },
 ]
 service-client = [
     { name = "httpx" },
@@ -1285,6 +1290,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/16/fc/cee2c45553c9a9bf77d8b0c391560c556d7ed756b1f0bb35eb5d48db09ea/markdown_it_py-4.3.0.tar.gz", hash = "sha256:91a58fa5b72c71a40cf7177250fd767480d7a2bb3ac426ccfb76fb90305fdaaa", size = 242701, upload-time = "2026-11-10T16:18:30.467Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c9/31/5f0ac2f1a1c67423c995c731a11cd4ad05d081a2be969d74f868bdb9cc70/markdown_it_py-4.3.0-py3-none-any.whl", hash = "sha256:7aa1511a46c39138de78d9eba92ce47e63124d8003fc98b3a351909e04239efa", size = 96951, upload-time = "2026-11-10T16:18:28.975Z" },
+]
+
+[[package]]
+name = "marko"
+version = "2.2.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/65/55/7ba85e14361632d734998b6a7f676de73d986a2ebb15b1008c794bf70ccf/marko-2.2.5.tar.gz", hash = "sha256:3a5bac3a2e3ccb53cd97dcd29e422c4f701c29ec7c61be4c0d827321ef057553", size = 153285, upload-time = "2026-10-27T11:42:11.297Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/63/67/be743617363627442717c2b865993eba99d17f2d1e0ad814bf703f190afb/marko-2.2.5-py3-none-any.whl", hash = "sha256:26380a6b037b5b49cec3847ee3585ba66f6782a4b9aec0d1216b7194ec5871ee", size = 47218, upload-time = "2026-10-27T11:42:10.276Z" },
 ]
 
 [[package]]
