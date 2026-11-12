@@ -17,6 +17,7 @@ dependencies = [
     "langchain-docling>=3.0.0",
     "langchain-openai>=1.6.0",
     "langgraph>=1.2.11",
+    "pypdf>=7.0.1",
     "python-dotenv>=1.2.3",
 ]
 

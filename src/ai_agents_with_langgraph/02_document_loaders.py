@@ -120,6 +120,14 @@ def document_loader_with_lazy_loading():
             print("Metadata:", doc.metadata["source"])
 
 
+def pdf_loader_old_way():
+    loader = PyPDFLoader("./docs/langchain_demo.pdf")
+    documents = loader.load()
+
+    print(f"Loaded {len(documents)} document(s) from PDF")
+    for i, doc in enumerate(documents):
+        print(f"Document {i+1} Content Preview: {doc.page_content[:100]}...")
+        print(f"Metadata: {doc.metadata}")
 
 if __name__ == '__main__':
     # uncomment one at a time:
@@ -127,4 +135,5 @@ if __name__ == '__main__':
     # load_text_file_new_way()
     # web_loader_old_way()
     # web_loader_new_way()
-    document_loader_with_lazy_loading()
+    # document_loader_with_lazy_loading()
+    pdf_loader_old_way()
