@@ -26,6 +26,7 @@ dependencies = [
     { name = "langchain-core" },
     { name = "langchain-docling" },
     { name = "langchain-openai" },
+    { name = "langchain-opendataloader-pdf" },
     { name = "langgraph" },
     { name = "pypdf" },
     { name = "python-dotenv" },
@@ -41,6 +42,7 @@ requires-dist = [
     { name = "langchain-core", specifier = ">=1.6.1" },
     { name = "langchain-docling", specifier = ">=3.0.0" },
     { name = "langchain-openai", specifier = ">=1.6.0" },
+    { name = "langchain-opendataloader-pdf", specifier = ">=2.0.0" },
     { name = "langgraph", specifier = ">=1.2.11" },
     { name = "pypdf", specifier = ">=7.0.1" },
     { name = "python-dotenv", specifier = ">=1.2.3" },
@@ -1074,6 +1076,19 @@ wheels = [
 ]
 
 [[package]]
+name = "langchain-opendataloader-pdf"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "opendataloader-pdf" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/73/e9/650020e85d492ffe6cf2658fa2f6ef3476956286e9c3d6d01b0cc0ed4cba/langchain_opendataloader_pdf-2.0.0.tar.gz", hash = "sha256:14c83dc1df9f3ef0c1e5698da6d30db3a8af1151f5ae42f09bffca1156acdd47", size = 1844895, upload-time = "2026-03-16T09:21:20.265Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/69/38fd79483e8c3de45086202c562dea38095aedb7dfa10206ab5a7f327ad4/langchain_opendataloader_pdf-2.0.0-py3-none-any.whl", hash = "sha256:4975f06b5d1a98826f96e328e5a26d67765e87d50a87f637659da35284feeee4", size = 12965, upload-time = "2026-03-16T09:21:18.477Z" },
+]
+
+[[package]]
 name = "langchain-protocol"
 version = "0.0.19"
 source = { registry = "https://pypi.org/simple" }
@@ -1601,6 +1616,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ad/ba/6d46da4232f80cb5842280e024242e6fed163418ab81bebc1c83f693bb0b/openai-3.7.0.tar.gz", hash = "sha256:e836eb7effee89df802cd0c7d1bad8de8c993976cf238c44d5b5b844f5aefd38", size = 1455615, upload-time = "2026-09-02T01:30:54.555Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d3/9d/77e0f43f04ae51a3d21bb08bd372a752856b86ee22648b1458c93a623927/openai-3.7.0-py3-none-any.whl", hash = "sha256:008fa33e0a01dc71039c27355ef8f476eed690e8e48bec18183878dcd32fb841", size = 1699594, upload-time = "2026-09-02T01:30:52.445Z" },
+]
+
+[[package]]
+name = "opendataloader-pdf"
+version = "2.5.21"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/57/b5/5141333107663dbdf68e659048b8f010c6e765514fde891423c3522f0157/opendataloader_pdf-2.5.21.tar.gz", hash = "sha256:ce5dc76166f43e8d5ec88f3c8b41ebd95b83e41f0d2bd725f26d2318d2475a38", size = 22755161, upload-time = "2026-11-10T05:43:30.649Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/81/a3/0cbb524abaa46566645b063216eb7f2f2e9a034dd0a596b4a55a109d51a5/opendataloader_pdf-2.5.21-py3-none-any.whl", hash = "sha256:c048d9ac985c9ba18519966c7024207688d8d3316d4260e8087b0cfd234d64d6", size = 22765944, upload-time = "2026-11-10T05:43:23.518Z" },
 ]
 
 [[package]]

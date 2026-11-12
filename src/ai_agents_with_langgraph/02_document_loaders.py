@@ -11,6 +11,7 @@ from langchain_community.document_loaders import (
 )
 from langchain_docling import DoclingLoader
 from langchain_docling.loader import ExportType
+from langchain_opendataloader_pdf import OpenDataLoaderPDFLoader
 
 
 def load_text_file_old_way():
@@ -129,6 +130,18 @@ def pdf_loader_old_way():
         print(f"Document {i+1} Content Preview: {doc.page_content[:100]}...")
         print(f"Metadata: {doc.metadata}")
 
+
+def pdf_loader_one_new_way():
+    # https://github.com/opendataloader-project/langchain-opendataloader-pdf
+    loader = OpenDataLoaderPDFLoader("./docs/langchain_demo.pdf", format='text')
+    documents = loader.load()
+
+    print(f"Loaded {len(documents)} document(s) from PDF")
+    for i, doc in enumerate(documents):
+        print(f"\n\nDocument {i+1} Content Preview: {doc.page_content[:100]}...")
+        print(f"\nMetadata: {doc.metadata}")
+
+
 if __name__ == '__main__':
     # uncomment one at a time:
     # load_text_file_old_way()
@@ -136,4 +149,5 @@ if __name__ == '__main__':
     # web_loader_old_way()
     # web_loader_new_way()
     # document_loader_with_lazy_loading()
-    pdf_loader_old_way()
+    # pdf_loader_old_way()
+    pdf_loader_one_new_way()
