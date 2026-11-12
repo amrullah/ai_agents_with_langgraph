@@ -1,3 +1,6 @@
+"""
+https://amrullah.github.io/#/page/ai%20agents%20rag%20langchain%20langgraph%2Fsection%201
+"""
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
