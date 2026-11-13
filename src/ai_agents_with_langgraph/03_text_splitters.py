@@ -1,6 +1,6 @@
 
 
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 
 
 SAMPLE_TEXT = """# Introduction to Machine Learning
@@ -87,5 +87,24 @@ def recursive_splitter():
     print(f"\nFirst chunk preview:\n{chunks[0][:200]}...")
 
 
+def markdown_splitter():
+    headers_to_consider = [
+        ("#", "h1"),
+        ("##", "h2"),
+        ("###", "h3"),
+    ]
+    splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_consider)
+    chunks = splitter.split_text(SAMPLE_TEXT)
+
+    print(f"Markdown Splitter produced {len(chunks)} chunks.")
+    for i, chunk in enumerate(chunks):
+        print(f"--- Chunk {i} ---")
+        print(f" Metadata: {chunk.metadata}\n")
+        print(f" Content: {chunk.page_content[:200]}...\n")
+
+
 if __name__ == '__main__':
-    recursive_splitter()
+    # uncomment one at a time
+    
+    # recursive_splitter()
+    markdown_splitter()
