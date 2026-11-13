@@ -1,5 +1,6 @@
 
 
+from langchain_opendataloader_pdf import OpenDataLoaderPDFLoader
 from langchain_text_splitters import Language, MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 
 
@@ -114,9 +115,27 @@ def code_splitter():
         print(chunk[:150] + "..." if len(chunk) > 150 else chunk)
 
 
+def pdf_splitter():
+    loader = OpenDataLoaderPDFLoader("./docs/langchain_demo.pdf")
+    docs = loader.load()
+
+    print(f"Loaded {len(docs)} documents from PDF.")
+
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+
+    # split the docs
+    split_docs = splitter.split_documents(docs)
+
+    print(f"Split into {len(split_docs)} chunks")
+    print(f"\nFirst chunk metadata: {split_docs[0].metadata}")
+    print(f"First chunk content: {split_docs[0].page_content[:200]}...")
+    print(f"\nLast chunk metadata: {split_docs[-1].metadata}")
+
+
 if __name__ == '__main__':
     # uncomment one at a time
 
     # recursive_splitter()
     # markdown_splitter()
-    code_splitter()
+    # code_splitter()
+    pdf_splitter()
