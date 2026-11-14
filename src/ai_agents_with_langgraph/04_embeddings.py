@@ -84,8 +84,8 @@ def similarity_search():
         print(f"  {score:.4f}: {doc}")
 
 
-# # Caching ---
-# def embedding_caching():
+# Caching ---
+def embedding_caching():
     from langchain_classic.embeddings.cache import CacheBackedEmbeddings
 
     from langchain_classic.storage import LocalFileStore
@@ -120,5 +120,5 @@ if __name__ == '__main__':
     # simple_embedding_demo()
     # basic_embeddings()
     # batch_embeddings()
-    similarity_search()
-    # embedding_caching()
+    # similarity_search()
+    embedding_caching()
