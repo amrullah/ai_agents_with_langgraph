@@ -53,37 +53,35 @@ def batch_embeddings():
         print(f"Text {i+1} - Vector norm: {np.linalg.norm(emb):.4f}")
 
 
-# def similarity_search():
+def similarity_search():
+    # Documents
+    docs = [
+        "Python is a programming language",
+        "JavaScript is used for web development",
+        "Machine learning enables AI applications",
+        "Deep learning uses neural networks",
+        "Cats are popular pets",
+    ]
 
-#     # Documents
+    query = "What programming languages exist?"
 
-#     docs = [
-#         "Python is a programming language",
-#         "JavaScript is used for web development",
-#         "Machine learning enables AI applications",
-#         "Deep learning uses neural networks",
-#         "Cats are popular pets",
-#     ]
+    # embed documents and query
+    doc_vector = embeddings_model.embed_documents(docs)
+    query_vector = embeddings_model.embed_query(query)
 
-#     query = "What programming languages exist?"
+    # compute cosine similarities
+    def cosine_similarity(vec1, vec2):
+        return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
-#     # embed documents and query
-#     doc_vector = embeddings_model.embed_documents(docs)
-#     query_vector = embeddings_model.embed_query(query)
+    similarities = [cosine_similarity(query_vector, doc_vec) for doc_vec in doc_vector]
 
-#     # compute cosine similarities
-#     def cosine_similarity(vec1, vec2):
-#         return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+    # rank documents by similarity
+    ranked_docs = sorted(zip(docs, similarities), key=lambda x: x[1], reverse=True)
 
-#     similarities = [cosine_similarity(query_vector, doc_vec) for doc_vec in doc_vector]
-
-#     # rank documents by similarity
-#     ranked_docs = sorted(zip(docs, similarities), key=lambda x: x[1], reverse=True)
-
-#     print(f"Query: {query}\n")
-#     print("Ranked by similarity:")
-#     for doc, score in ranked_docs:
-#         print(f"  {score:.4f}: {doc}")
+    print(f"Query: {query}\n")
+    print("Ranked by similarity:")
+    for doc, score in ranked_docs:
+        print(f"  {score:.4f}: {doc}")
 
 
 # # Caching ---
@@ -121,6 +119,6 @@ def batch_embeddings():
 if __name__ == '__main__':
     # simple_embedding_demo()
     # basic_embeddings()
-    batch_embeddings()
-    # similarity_search()
+    # batch_embeddings()
+    similarity_search()
     # embedding_caching()
